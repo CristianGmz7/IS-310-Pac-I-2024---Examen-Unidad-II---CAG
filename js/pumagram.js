@@ -51,6 +51,35 @@ function cargarLS() {
         cantidadLikesHTML.textContent = `0`;
     }
 
+    contenedorComentariosJSON = localStorage.getItem('comentarios');
+
+    if(contenedorComentariosJSON !== null){
+
+        const arrayComentarios = JSON.parse(contenedorComentariosJSON);
+
+        const contenedorComentarios = document.querySelector('.comments-container');
+
+        arrayComentarios.forEach((comentario) => {
+
+            const contenedorUnComentario = document.createElement('div');
+            contenedorUnComentario.classList.add('comment');
+
+            const spanUsuario = document.createElement('span');
+            spanUsuario.classList.add('comment-username');
+            spanUsuario.textContent = `${comentario.usuario}`;
+
+            let spanComentario = document.createElement('span');
+            spanComentario.classList.add('comment-text');
+            spanComentario.textContent = `${comentario.texto}`;  //añadido textContent
+
+            contenedorUnComentario.appendChild(spanUsuario);
+            contenedorUnComentario.appendChild(spanComentario);
+        
+            contenedorComentarios.appendChild(contenedorUnComentario);
+        });
+
+    }
+
 }
 
 //antes de este codigo ya se tiene el inciso a), b), f)
@@ -79,12 +108,16 @@ function agregarComentario(evento) {
     const spanUsuario = document.createElement('span');
     spanUsuario.classList.add('comment-username');
     spanUsuario.textContent = 'Usuario:';
+    console.log(spanUsuario);
 
     //CREAR EL SPAN DEL COMENTARIO
     let spanComentario = document.createElement('span');
     spanComentario.classList.add('comment-text');
-    spanComentario = document.createTextNode(barraTexto.value);
-    
+    let texto = document.createTextNode(barraTexto.value);
+    //spanComentario = document.createTextNode(barraTexto.value);
+    spanComentario.appendChild(texto);
+    console.log(spanComentario);
+
     contenedorUnComentario.appendChild(spanUsuario);
     contenedorUnComentario.appendChild(spanComentario);
 
@@ -108,8 +141,8 @@ function subirLS (){
     todosLosComentarios.forEach((comentario) => {
 
         const datosComentario = {
-            usuario: comentario.querySelector('.comment-username'),
-            texto: comentario.querySelector('.comment-text').textContent
+            usuario: comentario.querySelector('.comment-username').textContent,
+            texto: comentario.querySelector('.comment-text').textContent    //guardaba null antes de agregar el texto como un hijo
         }
 
         arrayComentarios.push(datosComentario);
